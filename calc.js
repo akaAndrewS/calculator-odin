@@ -2,6 +2,7 @@ let userNum1 = '';
 let userNum2 = '';
 let operator = '';
 let result = '';
+let error = false;
 
 let display = document.querySelector('.display');
 let displayValue = display.textContent;
@@ -23,10 +24,11 @@ function buttonPress(button) {
         case '8':
         case '9':
         case '0':
-            //IF there is a result
-            if(!(result === '')) {
+            //IF there is an error
+            if(error) {
                 clearDisplay();
                 result = '';
+                error = false;
             }
             //IF there is not currently an operator stored
             if (operator === '') {
@@ -69,6 +71,14 @@ function buttonPress(button) {
                 if (!(userNum2 === '')) {
                     //get the result and display the result
                     result = operate(+userNum1, +userNum2, operator);
+                    //IF operate returns ERR
+                    if (result === 'ERR') {
+                        clearDisplay();
+                        displayValue = result;
+                        displayOutput();
+                        error = true;
+                        return;
+                    }
                     displayValue = Math.round((result + Number.EPSILON) * 1000000000) / 1000000000;
                     displayOutput();
                     //set userNum1 to the result and clear userNum2 and result
@@ -88,10 +98,18 @@ function buttonPress(button) {
             
             break;
         case '=':
-            //needs to store the number after the operator in userNum2
+            //IF there is a number stored in userNum2
             if(!(userNum2 === '')) {
                 //get and display the result
                 result = operate(+userNum1, +userNum2, operator);
+                //IF operate returns ERR
+                if (result === 'ERR') {
+                    clearDisplay();
+                    displayValue = result;
+                    displayOutput();
+                    error = true;
+                    return;
+                }
                 displayValue = Math.round((result + Number.EPSILON) * 1000000000) / 1000000000;
                 displayOutput();
                 //set userNum1 to the result and clear userNum2 and result
@@ -100,7 +118,6 @@ function buttonPress(button) {
                 result = '';
                 console.log(`userNum1 is ${userNum1}`);  //FIXME ------------------------------
             }
-            //needs to ensure that a nuber is after the operator
             break;
         case 'Clear':
             clearDisplay();
@@ -157,41 +174,3 @@ function operate (num1, num2, operator1) {
             return divide(num1, num2);
     }
 }
-
-/*
-// TEST CALLS //FIXME --------------------
-// test add(), subtract(), multiply(), divide() functions
-for (let i = 0; i < 100; i++) {
-    for (let j = 0; j < 100; j++) {
-        if (!(add(i, j) === i + j)) {
-            console.log(`sum of ${i} and ${j} is false`);
-        }
-        if (!(subtract(i, j) === i - j)) {
-            console.log(`subtract of ${i} and ${j} is false`);
-        }
-        if (!(multiply(i, j) === i * j)) {
-            console.log(`multiply of ${i} and ${j} is false`);
-        }
-        if (!(divide(i, j) === i / j) && !(divide(i, j) === "ERR")) {
-            console.log(`divide of ${i} and ${j} is false`);
-        }
-    }
-}
-// test operate function calling add(), subtract(), multiply(), divide() functions
-for (let i = 0; i < 100; i++) {
-    for (let j = 0; j < 100; j++) {
-        if (!(operate(i, j, '+') === i + j)) {
-            console.log(`sum of ${i} and ${j} is false`);
-        }
-        if (!(operate(i, j, '-') === i - j)) {
-            console.log(`subtract of ${i} and ${j} is false`);
-        }
-        if (!(operate(i, j, '*') === i * j)) {
-            console.log(`multiply of ${i} and ${j} is false`);
-        }
-        if (!(operate(i, j, '/') === i / j) && !(operate(i, j, '/') === "ERR")) {
-            console.log(`divide of ${i} and ${j} is false`);
-        }
-    }
-}
-console.log("Done");*/
