@@ -119,7 +119,7 @@ function buttonPress(button) {
                 console.log(`userNum1 is ${userNum1}`);  //FIXME ------------------------------
             }
             break;
-        case 'Clear':
+        case 'C':
             clearDisplay();
             break;
     }
