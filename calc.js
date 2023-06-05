@@ -1,16 +1,27 @@
+//variable to hold the numbers and operator
 let userNum1 = ''; 
 let userNum2 = '';
 let operator = '';
+//variable to hold result
 let result = '';
+//variables for checks
 let error = false;
 let noDecimal = true;
+let currentlyDisplaying = '';
+//variable for what is to be shown in display
+let displayValue = '';
 
+//variable for display node
 let display = document.querySelector('.display');
-let displayValue = display.textContent;
+//variable for nodelist of buttons
 let buttons = document.querySelectorAll('button');
+
+//EventListener for each button
 buttons.forEach( (button) => {
     button.addEventListener('click', () => buttonPress(button));
 });
+//EventListener for keyboard
+window.addEventListener('keydown', keyboardButtonPress);
 
 // buttonPress() function that determines which button was pressed and reacts accordingly
 function buttonPress(button) {
@@ -38,30 +49,47 @@ function buttonPress(button) {
                     userNum1 = '';
                     result = '';
                 }
-                //add button's value to 'displayValue' and display
-                displayValue += button.textContent;
+                currentlyDisplaying = 'userNum1';
+                //IF userNum1 only contains a single digit and that digit is 0
+                if(userNum1.length === 1 && userNum1 === '0') {
+                    //set userNum1 to only the current button
+                    userNum1 = button.textContent;
+                }
+                else {
+                    //attach the number to userNum1
+                    userNum1 += button.textContent;
+                }                
+                //display userNum1
+                displayValue = userNum1;
                 displayOutput();
-                //save the number to userNum1
-                userNum1 += button.textContent;
                 console.log(`userNum1 is ${userNum1}`);  //FIXME ----------------------------
             }
             //IF there is an operator stored but no userNum2
             else if (userNum2 ==='') {
                 //remove the display value
                 displayValue = '';
-                //add button's value to 'displayValue' and display
-                displayValue += button.textContent;
-                displayOutput();
+                currentlyDisplaying = 'userNum2';
                 //save the number to userNum2
                 userNum2 += button.textContent;
+                //display userNum2
+                displayValue = userNum2;
+                displayOutput();
                 console.log(`userNum2 is ${userNum2}`);  //FIXME ------------------------------
             }
             else {
-                //add button's value to 'displayValue' and display
-                displayValue += button.textContent;
+                currentlyDisplaying = 'userNum2';
+                //IF userNum2 only contains a single digit and that digit is 0
+                if(userNum2.length === 1 && userNum2 === '0') {
+                    //set userNum2 to only the current button
+                    userNum2 = button.textContent;
+                }
+                else {
+                    //attach the number to userNum2
+                    userNum2 += button.textContent;
+                } 
+                //display userNum2
+                displayValue = userNum2;
                 displayOutput();
-                //save the number to userNum2
-                userNum2 += button.textContent;
                 console.log(`userNum2 is ${userNum2}`);  //FIXME ------------------------------
             }
             break;
@@ -79,6 +107,7 @@ function buttonPress(button) {
             if (!(userNum1 === '')) {
                 //reset decimal tracker
                 noDecimal = true;
+                currentlyDisplaying = '';
                 //IF there is also a number stored in userNum2
                 if (!(userNum2 === '')) {
                     //get the result and display the result
@@ -93,6 +122,7 @@ function buttonPress(button) {
                     }
                     displayValue = Math.round((result + Number.EPSILON) * 1000000000) / 1000000000;
                     displayOutput();
+                    currentlyDisplaying = 'operator result';
                     //set userNum1 to the result and clear userNum2 and result
                     userNum1 = `${result}`;
                     userNum2 = '';
@@ -132,6 +162,7 @@ function buttonPress(button) {
                 }
                 displayValue = Math.round((result + Number.EPSILON) * 1000000000) / 1000000000;
                 displayOutput();
+                currentlyDisplaying = 'result';
                 displayValue = '';
                 //set userNum1 to the result and clear userNum2 and operator (but not result)
                 userNum1 = `${result}`;
@@ -158,6 +189,7 @@ function buttonPress(button) {
                     userNum1 = '0.';
                     displayValue = '0.'
                     displayOutput();
+                    currentlyDisplaying = 'userNum1';
                 }
                 //else if (there is a userNum1 && no operator) 
                 else if (!(userNum1 === '') && (operator === '')) {
@@ -168,6 +200,7 @@ function buttonPress(button) {
                         noDecimal = false;
                         displayValue = userNum1;
                         displayOutput();
+                        currentlyDisplaying = 'userNum1';
                     }
                     //ELSE add a decimal to userNum1 and display
                     else {
@@ -185,6 +218,7 @@ function buttonPress(button) {
                     displayValue = '0.';
                     noDecimal = false;
                     displayOutput();
+                    currentlyDisplaying = 'userNum2';
                 }
                 else {
                     //add a decimal to userNum2, change noDecimal to false and display
@@ -202,6 +236,45 @@ function buttonPress(button) {
                 result = '';
                 error = false;
             }
+            console.log(userNum1.length); //FIXME ----------------------------------------------------------------
+            //IF the display is currently showing userNum1
+            if(currentlyDisplaying === 'userNum1') {
+                //IF the last character of userNum1 is a decimal
+                if(userNum1[userNum1.length - 1] === '.') {
+                    noDecimal = true;
+                }
+                //set userNum1 to itself minus its last character
+                userNum1 = userNum1.substring(0, userNum1.length-1);
+                //IF userNum1 still contains a value
+                if(userNum1.length > 0) {
+                    displayValue = userNum1;
+                    displayOutput();
+                }
+                else {
+                    displayValue = '';
+                    displayOutput();
+                    currentlyDisplaying = '';
+                }
+            }
+            //ELSE IF the display is currently showing userNum2
+            else if (currentlyDisplaying === 'userNum2') {
+                //IF the last character of userNum2 is a decimal
+                if(userNum2[userNum2.length - 1] === '.') {
+                    noDecimal = true;
+                }
+                //set userNum2 to itself minus its last character
+                userNum2 = userNum2.substring(0, userNum2.length-1);
+                //IF userNum2 still contains a value
+                if(userNum2.length > 0) {
+                    displayValue = userNum2;
+                    displayOutput();
+                }
+                else {
+                    displayValue = '';
+                    displayOutput();
+                    currentlyDisplaying = '';
+                }
+            }
             break;
         case "+/-":
             //IF there is an error
@@ -210,16 +283,36 @@ function buttonPress(button) {
                 result = '';
                 error = false;
             }
+            //IF the display is currently showing userNum1
+            if(currentlyDisplaying === 'userNum1') {
+                //change it to either positive or negative
+                userNum1 *= -1;
+                //keep userNum1 a string
+                userNum1 = `${userNum1}`;
+                displayValue = userNum1;
+                displayOutput();
+            }
+            //ELSE IF the display is currently showing userNum2
+            else if (currentlyDisplaying === 'userNum2') {
+                //change it to either positive or negative
+                userNum2 *= -1;
+                //keep userNum2 a string
+                userNum2 = `${userNum2}`;
+                displayValue = userNum2;
+                displayOutput();
+            }
             break;
     }
 }
 
-// clearDisplay() function that resets userNum1, userNum2, operator and displayValue
+// clearDisplay() function that resets userNum1, userNum2, operator, displayValue, currentlyDisplaying and noDecimal
 function clearDisplay() {
     userNum1 = '';
     userNum2 = '';
     operator = '';
     displayValue = '';
+    currentlyDisplaying = '';
+    noDecimal = true;
     displayOutput();
 }
 
@@ -264,8 +357,7 @@ function operate (num1, num2, operator1) {
     }
 }
 
-window.addEventListener('keydown', keyboardButtonPress);
-
+// keyboardButtonPress() functon takes a keyboard press then creates and passes a custom button to buttonPress() if applicable
 function keyboardButtonPress(e) {
     console.log(e);   //FIXME -------------------------------------------------------------------------------
     let customButton;
@@ -346,4 +438,3 @@ function keyboardButtonPress(e) {
             break;
     }
 }
-
