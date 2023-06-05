@@ -62,7 +62,6 @@ function buttonPress(button) {
                 //display userNum1
                 displayValue = userNum1;
                 displayOutput();
-                console.log(`userNum1 is ${userNum1}`);  //FIXME ----------------------------
             }
             //IF there is an operator stored but no userNum2
             else if (userNum2 ==='') {
@@ -74,7 +73,6 @@ function buttonPress(button) {
                 //display userNum2
                 displayValue = userNum2;
                 displayOutput();
-                console.log(`userNum2 is ${userNum2}`);  //FIXME ------------------------------
             }
             else {
                 currentlyDisplaying = 'userNum2';
@@ -90,7 +88,6 @@ function buttonPress(button) {
                 //display userNum2
                 displayValue = userNum2;
                 displayOutput();
-                console.log(`userNum2 is ${userNum2}`);  //FIXME ------------------------------
             }
             break;
         case '+':
@@ -129,12 +126,10 @@ function buttonPress(button) {
                     result = '';
                     //save the new operator
                     operator = button.textContent;
-                    console.log(`userNum1 is ${userNum1}, operator is ${operator}`);  //FIXME ------------------------------
                 }
                 //ELSE just save the operator
                 else {
                     operator = button.textContent;
-                    console.log(operator); //FIXME ==================------------
                 }
             }
             
@@ -168,7 +163,6 @@ function buttonPress(button) {
                 userNum1 = `${result}`;
                 userNum2 = '';
                 operator = '';
-                console.log(`userNum1 is now ${userNum1}`);  //FIXME ------------------------------
             }
             break;
         case 'C':
@@ -236,7 +230,6 @@ function buttonPress(button) {
                 result = '';
                 error = false;
             }
-            console.log(userNum1.length); //FIXME ----------------------------------------------------------------
             //IF the display is currently showing userNum1
             if(currentlyDisplaying === 'userNum1') {
                 //IF the last character of userNum1 is a decimal
@@ -359,7 +352,6 @@ function operate (num1, num2, operator1) {
 
 // keyboardButtonPress() functon takes a keyboard press then creates and passes a custom button to buttonPress() if applicable
 function keyboardButtonPress(e) {
-    console.log(e);   //FIXME -------------------------------------------------------------------------------
     let customButton;
     switch(e.key) { 
         case '1':
